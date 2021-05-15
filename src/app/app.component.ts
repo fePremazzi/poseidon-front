@@ -16,9 +16,8 @@ import { environment } from '../environments/environment';
 export class AppComponent {
   title = 'Poseidon!';
   angForm: FormGroup;
-  angDeleteForm: FormGroup;
-  angFindForm: FormGroup;
-  _isDisabled = true;
+  imageForm: FormGroup;
+  _isDisabled = false;
   container = {} as ContainerResponse
   containerRequest = {} as ContainerRequest
   containers: ContainerResponse[];
@@ -27,7 +26,8 @@ export class AppComponent {
   images: ImageResponse[];
 
   constructor(private fb: FormBuilder, private imageService: ImagesService, private containerService: ContainersService) {
-    this.createForm();
+    this.createContainerForm();
+    this.createImageForm();
   }
 
   ngOnInit() {
@@ -37,16 +37,21 @@ export class AppComponent {
   }
 
 
-  createForm() {
+  createContainerForm() {
     this.angForm = this.fb.group({
       transferId: [{ value: 0, disabled: this._isDisabled }, [Validators.pattern("^[0-9]*$"), Validators.min(0)]],
       imageNameTag: ['', Validators.required],
       containerPort: ['', Validators.pattern("[0-9]+:[0-9]+")],
       containerEnvFull: ['',Validators.pattern("(([A-Za-z0-9_]+=[A-Za-z0-9_]+),?)+")],
-      containername: ['',''],
+      containername: ['',''],      
+    });
+  }
+
+  createImageForm(){
+    this.imageForm = this.fb.group({
       imageName: ['', Validators.required],
       imageTag: ['',''],
-    });
+    })
   }
 
   isDisabled() {
@@ -105,6 +110,10 @@ export class AppComponent {
 
   public pullImage(): void {
     console.log("pulling image")
+  }
+
+  public enableButton(): boolean{
+    return true
   }
 
 

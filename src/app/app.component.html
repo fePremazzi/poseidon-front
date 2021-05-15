@@ -115,7 +115,7 @@
 
   <h4>Pulling an image</h4>
 
-  <form [formGroup]="angForm" (ngSubmit)="pullImage()" novalidate>
+  <form [formGroup]="imageForm" (ngSubmit)="pullImage()" novalidate>
 
     <div class="form-row">
 
@@ -123,9 +123,9 @@
         <label>Name <span style="color:red;">*</span></label>
         <input class="form-control" [(ngModel)]="imageRequest.name" minlength="1" required formControlName="imageName" type="text">
         <div
-          *ngIf="angForm.controls['imageName'].invalid && (angForm.controls['imageName'].dirty || angForm.controls['imageName'].touched)"
+          *ngIf="imageForm.controls['imageName'].invalid && (imageForm.controls['imageName'].dirty || imageForm.controls['imageName'].touched)"
           class="alert alert-danger">
-          <div *ngIf="angForm.controls['imageName'].errors.required">
+          <div *ngIf="imageForm.controls['imageName'].errors.required">
             Image name is required
           </div>
         </div>
@@ -133,13 +133,13 @@
 
       <div class="col">
         <label>Tag:</label>
-        <input class="form-control" [(ngModel)]="imageRequest.tag" required formControlName="imageTag"
+        <input class="form-control" [(ngModel)]="imageRequest.tag" formControlName="imageTag"
           type="text">        
       </div>
 
     </div>
     <br>
-    <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success">
+    <button type="submit" [disabled]="imageForm.pristine || imageForm.invalid" class="btn btn-success">
       Submit
     </button>
   </form>
