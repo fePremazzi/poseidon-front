@@ -2,8 +2,15 @@ import { Component, OnInit  } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CustomValidators } from 'ngx-custom-validators';
 import { DataService } from 'src/app/data.service';
+import { ContainersService } from 'src/app/containers.service';
+import { ImagesService } from 'src/app/images.service';
 import { TransferResponse } from "../app/models/transfer-response";
 import { TransferRequest } from './models/transfer-request';
+import { ContainerResponse } from './models/container-response';
+import { ContainerRequest } from './models/container-request';
+import { ImageRequest } from './models/image-request';
+import { ImageResponse } from './models/image-response';
+import { keyframes } from '@angular/animations';
 
 @Component({
   selector: 'app-root',
@@ -19,15 +26,23 @@ export class AppComponent {
   transfer = {} as TransferResponse;
   transferRequest = {} as TransferRequest;
   transferList: TransferResponse[];
-  
-  constructor(private fb: FormBuilder, private dataService: DataService) {
+  container = {} as ContainerResponse
+  containerRequest = {} as ContainerRequest
+  containers: ContainerResponse[];
+  image = {} as ImageResponse
+  imageRequest = {} as ImageRequest
+  images: ImageResponse[];
+
+  constructor(private fb: FormBuilder, private dataService: DataService,
+              private imageService: ImagesService, private containerService: ContainersService) {
     this.createForm();
     this.createDeleteForm();
     this.createFindForm();
   }
 
   ngOnInit() {
-    this.findAll();
+    this.findAllImages();
+    this.findAllContainers()
   }
 
 
@@ -50,6 +65,76 @@ export class AppComponent {
       transferId: ['', [Validators.pattern("^[0-9]*$"), Validators.min(1)]]
     });
   }
+
+  isDisabled() {
+    if (this._isDisabled) {
+      this.angForm.controls['transferId'].enable();
+      this._isDisabled = false;
+    } else {
+      this.angForm.controls['transferId'].disable();
+      this.angForm.controls['transferId'].setValue(0);
+      this._isDisabled = true;
+    }
+  }
+
+  public findAllImages(): void {
+    this.imageService.getImages().subscribe((data: ImageResponse[])=>{
+      this.images = data;
+    })  
+  }
+
+  public findAllContainers(): void {
+    this.containerService.getContainers().subscribe((data: ContainerResponse[])=>{
+      this.containers = data;
+    })  
+  }
+
+  public extractPort(object: Object): string{
+    return Object.entries(object["Ports"])[0][1][0]["HostPort"] + ":" + Object.entries(object["Ports"])[0][0]
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   public createTransfer(): void {
@@ -96,15 +181,6 @@ export class AppComponent {
   }
 
 
-  isDisabled() {
-    if (this._isDisabled) {
-      this.angForm.controls['transferId'].enable();
-      this._isDisabled = false;
-    } else {
-      this.angForm.controls['transferId'].disable();
-      this.angForm.controls['transferId'].setValue(0);
-      this._isDisabled = true;
-    }
-  }
+
 
 }

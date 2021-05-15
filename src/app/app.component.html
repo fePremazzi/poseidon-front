@@ -1,11 +1,12 @@
 <!-- app.component.html -->
 
 <div class="container">
-  <h1>Welcome to {{title}} <img src="https://avatars.githubusercontent.com/u/38231749?s=280&v=4" alt="" width="80" height="80"></h1>
+  <h1>Welcome to {{title}} <img src="https://avatars.githubusercontent.com/u/38231749?s=280&v=4" alt="" width="80"
+      height="80"></h1>
   <h4>A docker resource manager</h4>
 
   <br>
-  <h4>Create or update a schedule</h4>
+  <h4>Running a container</h4>
 
   <form [formGroup]="angForm" (ngSubmit)="createTransfer()" novalidate>
 
@@ -13,7 +14,8 @@
 
       <div class="col">
         <label>Origin account number:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.originAccount" minlength="6" maxlength="6" required formControlName="originAccount" type="text">
+        <input class="form-control" [(ngModel)]="transferRequest.originAccount" minlength="6" maxlength="6" required
+          formControlName="originAccount" type="text">
         <div
           *ngIf="angForm.controls['originAccount'].invalid && (angForm.controls['originAccount'].dirty || angForm.controls['originAccount'].touched)"
           class="alert alert-danger">
@@ -28,8 +30,8 @@
 
       <div class="col">
         <label>Destination account number:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.destinationAccount" minlength="6" maxlength="6" required formControlName="destinationAccount"
-          type="text">
+        <input class="form-control" [(ngModel)]="transferRequest.destinationAccount" minlength="6" maxlength="6"
+          required formControlName="destinationAccount" type="text">
         <div
           *ngIf="angForm.controls['destinationAccount'].invalid && (angForm.controls['destinationAccount'].dirty || angForm.controls['destinationAccount'].touched)"
           class="alert alert-danger">
@@ -49,7 +51,8 @@
 
       <div class="col">
         <label>Transfer value:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.value" required formControlName="transferValue" type="text">
+        <input class="form-control" [(ngModel)]="transferRequest.value" required formControlName="transferValue"
+          type="text">
         <div
           *ngIf="angForm.controls['transferValue'].invalid && (angForm.controls['transferValue'].dirty || angForm.controls['transferValue'].touched)"
           class="alert alert-danger">
@@ -68,7 +71,8 @@
 
       <div class="col">
         <label>Date to transfer:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.scheduledDate" minlength="10" maxlength="10" required formControlName="scheduledDate" type="date">
+        <input class="form-control" [(ngModel)]="transferRequest.scheduledDate" minlength="10" maxlength="10" required
+          formControlName="scheduledDate" type="date">
         <div
           *ngIf="angForm.controls['scheduledDate'].invalid && (angForm.controls['scheduledDate'].dirty || angForm.controls['scheduledDate'].touched)"
           class="alert alert-danger">
@@ -87,8 +91,7 @@
     </div>
 
     <br>
-    <button type="submit" [disabled]="angForm.pristine || angForm.invalid"
-      class="btn btn-success">
+    <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success">
       Submit
     </button>
   </form>
@@ -97,37 +100,106 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">Transfer management</li>
+      <li class="breadcrumb-item active" aria-current="page">Running containers</li>
     </ol>
   </nav>
   <div class="container">
     <div class="card list-transfer">
-      <h5 class="card-header">Transfer list</h5>
+      <h5 class="card-header">Container list</h5>
       <div class="card-body">
         <table class="table">
           <thead>
             <tr>
               <th scope="col">Id</th>
-              <th scope="col">Origin acc</th>
-              <th scope="col">Destination acc</th> 
-              <th scope="col">Opening date</th>             
-              <th scope="col">Scheduled date</th>              
-              <th scope="col">Tax value</th>
-              <th scope="col">Value</th>
+              <th scope="col">Name</th>
+              <th scope="col">Image</th>
+              <th scope="col">StartedAt</th>
+              <th scope="col">Status</th>
+              <th scope="col">Port</th>
+              <th scope="col">CreatedAt</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let tf of transferList">
-              <td>{{tf.id}}</td>
-              <td>{{tf.originAccount}}</td>
-              <td>{{tf.destinationAccount}}</td> 
-              <td>{{tf.openingDate}}</td>             
-              <td>{{tf.scheduledDate}}</td>              
-              <td>{{tf.taxValue}}</td>
-              <td>{{tf.value}}</td>
+            <tr *ngFor="let ct of containers">
+              <td>{{ct.ShortId}}</td>
+              <td>{{ct.Name}}</td>
+              <td>{{ct.Image}}</td>
+              <td>{{ct.State.StartedAt}}</td>
+              <td>{{ct.State.Status}}</td>
+              <td>{{extractPort(ct)}}</td>
+              <!-- <td>{{Object.entries(ct["Ports"])[0][1][0]["HostPort"]}}:{{Object.entries(ct["Ports"])[0][0]}}</td> -->
+              <td>{{ct.CreatedAt}}</td>
               <td>
-                <button type="button" class="btn btn-warning btn-sm" (click)="editTransfer(tf)">Edit</button>
-                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteById(tf.id)">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteContainerById(ct.id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <h4>Pulling an image</h4>
+
+  <form [formGroup]="angForm" (ngSubmit)="createTransfer()" novalidate>
+
+    <div class="form-row">
+
+      <div class="col">
+        <label>Name:</label>
+        <input class="form-control" [(ngModel)]="transferRequest.originAccount" minlength="1" required formControlName="originAccount" type="text">
+        <div
+          *ngIf="angForm.controls['originAccount'].invalid && (angForm.controls['originAccount'].dirty || angForm.controls['originAccount'].touched)"
+          class="alert alert-danger">
+          <div *ngIf="angForm.controls['originAccount'].errors.required">
+            Image name is required
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <label>Tag:</label>
+        <input class="form-control" [(ngModel)]="transferRequest.destinationAccount" required formControlName="destinationAccount"
+          type="text">        
+      </div>
+
+    </div>
+    <br>
+    <button type="submit" [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success">
+      Submit
+    </button>
+  </form>
+
+  <br />
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Pulled images</li>
+    </ol>
+  </nav>
+  <div class="container">
+    <div class="card list-transfer">
+      <h5 class="card-header">Images list</h5>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Tag</th>
+              <th scope="col">CreatedAt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let im of images">
+              <td>{{im.ShortId}}</td>
+              <td>{{im.Name}}</td>
+              <td>{{im.Tag}}</td>
+              <td>{{im.CreatedAt}}</td>
+              <td>
+                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteImageById(im.id)">Delete</button>
               </td>
             </tr>
           </tbody>
