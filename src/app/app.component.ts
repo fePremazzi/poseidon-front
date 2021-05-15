@@ -10,7 +10,7 @@ import { ContainerResponse } from './models/container-response';
 import { ContainerRequest } from './models/container-request';
 import { ImageRequest } from './models/image-request';
 import { ImageResponse } from './models/image-response';
-import { keyframes } from '@angular/animations';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +43,7 @@ export class AppComponent {
   ngOnInit() {
     this.findAllImages();
     this.findAllContainers()
+    console.log(environment.test)
   }
 
 
@@ -91,6 +92,10 @@ export class AppComponent {
 
   public extractPort(object: Object): string{
     return Object.entries(object["Ports"])[0][1][0]["HostPort"] + ":" + Object.entries(object["Ports"])[0][0]
+  }
+
+  public extractLink(object: Object): string{
+    return environment.dockerHost + Object.entries(object["Ports"])[0][1][0]["HostPort"]
   }
 
 

@@ -126,7 +126,7 @@
               <td>{{ct.Image}}</td>
               <td>{{ct.State.StartedAt}}</td>
               <td>{{ct.State.Status}}</td>
-              <td>{{extractPort(ct)}}</td>
+              <td><a href="{{ extractLink(ct) }}" target="_blank">{{extractPort(ct)}}</a></td>
               <!-- <td>{{Object.entries(ct["Ports"])[0][1][0]["HostPort"]}}:{{Object.entries(ct["Ports"])[0][0]}}</td> -->
               <td>{{ct.CreatedAt}}</td>
               <td>
