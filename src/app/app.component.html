@@ -8,40 +8,26 @@
   <br>
   <h4>Running a container</h4>
 
-  <form [formGroup]="angForm" (ngSubmit)="createTransfer()" novalidate>
+  <form [formGroup]="angForm" (ngSubmit)="runContainer()" novalidate>
 
     <div class="form-row">
 
       <div class="col">
-        <label>Origin account number:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.originAccount" minlength="6" maxlength="6" required
-          formControlName="originAccount" type="text">
+        <label>Image:tag <span style="color:red;">*</span></label>
+        <input class="form-control" [(ngModel)]="containerRequest.image" minlength="1" required
+          formControlName="imageNameTag" type="text">
         <div
-          *ngIf="angForm.controls['originAccount'].invalid && (angForm.controls['originAccount'].dirty || angForm.controls['originAccount'].touched)"
+          *ngIf="angForm.controls['imageNameTag'].invalid && (angForm.controls['imageNameTag'].dirty || angForm.controls['imageNameTag'].touched)"
           class="alert alert-danger">
-          <div *ngIf="angForm.controls['originAccount'].errors.required">
-            Origin account number is required.
-          </div>
-          <div *ngIf="angForm.controls['originAccount'].errors.minlength">
-            Origin account number must be at least 6 characters long.
-          </div>
+          <div *ngIf="angForm.controls['imageNameTag'].errors.required">
+            Image name is required.
+          </div>          
         </div>
       </div>
 
       <div class="col">
-        <label>Destination account number:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.destinationAccount" minlength="6" maxlength="6"
-          required formControlName="destinationAccount" type="text">
-        <div
-          *ngIf="angForm.controls['destinationAccount'].invalid && (angForm.controls['destinationAccount'].dirty || angForm.controls['destinationAccount'].touched)"
-          class="alert alert-danger">
-          <div *ngIf="angForm.controls['destinationAccount'].errors.required">
-            Destination account number is required.
-          </div>
-          <div *ngIf="angForm.controls['destinationAccount'].errors.minlength">
-            Destination account number must be at least 6 characters long.
-          </div>
-        </div>
+        <label>Name:</label>
+        <input class="form-control" [(ngModel)]="containerRequest.name" formControlName="containername" type="text">
       </div>
 
     </div>
@@ -50,40 +36,26 @@
     <div class="form-row">
 
       <div class="col">
-        <label>Transfer value:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.value" required formControlName="transferValue"
-          type="text">
+        <label>Port (external:internal):</label>
+        <input class="form-control" [(ngModel)]="containerRequest.port" formControlName="containerPort"  type="text">
         <div
-          *ngIf="angForm.controls['transferValue'].invalid && (angForm.controls['transferValue'].dirty || angForm.controls['transferValue'].touched)"
+          *ngIf="angForm.controls['containerPort'].invalid && (angForm.controls['containerPort'].dirty || angForm.controls['containerPort'].touched)"
           class="alert alert-danger">
-          <div *ngIf="angForm.controls['transferValue'].errors.required">
-            Transfer value is required.
-          </div>
-          <div *ngIf="angForm.controls['transferValue'].errors.pattern">
-            Transfer value must be numerical.
-          </div>
-          <div *ngIf="angForm.controls['transferValue'].errors.min">
-            Transfer value must be a minimun value of 0.01.
-          </div>
+          <div *ngIf="angForm.controls['containerPort'].errors.pattern">
+            If provided, must be formated as 8080:80 for example. Being "external:internal" docker
+          </div>     
         </div>
       </div>
 
 
       <div class="col">
-        <label>Date to transfer:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.scheduledDate" minlength="10" maxlength="10" required
-          formControlName="scheduledDate" type="date">
+        <label>Environment:</label>
+        <input class="form-control" [(ngModel)]="containerRequest.env_full" formControlName="containerEnvFull" type="text">
         <div
-          *ngIf="angForm.controls['scheduledDate'].invalid && (angForm.controls['scheduledDate'].dirty || angForm.controls['scheduledDate'].touched)"
+          *ngIf="angForm.controls['containerEnvFull'].invalid && (angForm.controls['containerEnvFull'].dirty || angForm.controls['containerEnvFull'].touched)"
           class="alert alert-danger">
-          <div *ngIf="angForm.controls['scheduledDate'].errors.required">
-            Scheduling date transfer is required.
-          </div>
-          <div *ngIf="angForm.controls['scheduledDate'].errors.date">
-            Scheduling date does not match the pattern.
-          </div>
-          <div *ngIf="angForm.controls['scheduledDate'].errors.minlength">
-            Scheduling date must have 10 characters long.
+          <div *ngIf="angForm.controls['containerEnvFull'].errors.pattern">
+            If provided, must be formated as: ENV_NAME=ENV_VALUE or NV_NAME1=ENV_VALUE1,NV_NAME2=ENV_VALUE2, ...
           </div>
         </div>
       </div>
@@ -130,7 +102,7 @@
               <!-- <td>{{Object.entries(ct["Ports"])[0][1][0]["HostPort"]}}:{{Object.entries(ct["Ports"])[0][0]}}</td> -->
               <td>{{ct.CreatedAt}}</td>
               <td>
-                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteContainerById(ct.id)">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteContainerById(ct.ShortId)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -143,28 +115,25 @@
 
   <h4>Pulling an image</h4>
 
-  <form [formGroup]="angForm" (ngSubmit)="createTransfer()" novalidate>
+  <form [formGroup]="angForm" (ngSubmit)="pullImage()" novalidate>
 
     <div class="form-row">
 
       <div class="col">
-        <label>Name:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.originAccount" minlength="0" required formControlName="originAccount" type="text">
+        <label>Name <span style="color:red;">*</span></label>
+        <input class="form-control" [(ngModel)]="imageRequest.name" minlength="1" required formControlName="imageName" type="text">
         <div
-          *ngIf="angForm.controls['originAccount'].invalid && (angForm.controls['originAccount'].dirty || angForm.controls['originAccount'].touched)"
+          *ngIf="angForm.controls['imageName'].invalid && (angForm.controls['imageName'].dirty || angForm.controls['imageName'].touched)"
           class="alert alert-danger">
-          <div *ngIf="angForm.controls['originAccount'].errors.required">
+          <div *ngIf="angForm.controls['imageName'].errors.required">
             Image name is required
-          </div>
-          <div *ngIf="angForm.controls['originAccount'].errors.minlength">
-            Destination account number must be at least 1 characters long.
           </div>
         </div>
       </div>
 
       <div class="col">
         <label>Tag:</label>
-        <input class="form-control" [(ngModel)]="transferRequest.destinationAccount" required formControlName="destinationAccount"
+        <input class="form-control" [(ngModel)]="imageRequest.tag" required formControlName="imageTag"
           type="text">        
       </div>
 
@@ -202,7 +171,7 @@
               <td>{{im.Tag}}</td>
               <td>{{im.CreatedAt}}</td>
               <td>
-                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteImageById(im.id)">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteImageById(im.ShortId)">Delete</button>
               </td>
             </tr>
           </tbody>

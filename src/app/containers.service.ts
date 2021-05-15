@@ -20,7 +20,7 @@ export class ContainersService {
   }
 
   //Get All Containers
-  getContainers(): Observable<ContainerResponse[]> {
+  getAll(): Observable<ContainerResponse[]> {
     return this.httpClient.get<ContainerResponse[]>(this.REST_API_SERVER)
       .pipe(
         retry(2),
@@ -28,7 +28,7 @@ export class ContainersService {
   }
 
   // get a Container by id
-  getContainerById(containerId: string): Observable<ContainerResponse> {
+  getById(containerId: string): Observable<ContainerResponse> {
     return this.httpClient.get<ContainerResponse>(this.REST_API_SERVER + '/' + containerId)
       .pipe(
         retry(2),
@@ -37,7 +37,7 @@ export class ContainersService {
   }
 
   // run a container
-  runContainer(containerReq: ContainerRequest): Observable<ContainerRequest> {
+  run(containerReq: ContainerRequest): Observable<ContainerRequest> {
     return this.httpClient.post<ContainerRequest>(this.REST_API_SERVER, JSON.stringify(containerReq), this.httpOptions)
       .pipe(
         retry(2),
@@ -46,7 +46,7 @@ export class ContainersService {
   }
 
   // delete a Container by id
-  deleteContainerById(containerId: string) {
+  deleteById(containerId: string) {
     return this.httpClient.delete(this.REST_API_SERVER + '/' + containerId)
       .pipe(
         retry(1),
@@ -55,7 +55,7 @@ export class ContainersService {
   }
 
   // delete all Containers
-  deleteContainers() {
+  deleteAll() {
     return this.httpClient.delete(this.REST_API_SERVER)
       .pipe(
         retry(1),

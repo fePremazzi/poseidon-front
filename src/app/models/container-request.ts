@@ -3,4 +3,5 @@ export interface ContainerRequest {
 	name: string;
     port: string;
 	env: {};
+    env_full: string;
 }

@@ -21,7 +21,7 @@ export class ImagesService {
   }
 
   //Get All Images
-  getImages(): Observable<ImageResponse[]> {
+  getAll(): Observable<ImageResponse[]> {
     return this.httpClient.get<ImageResponse[]>(this.REST_API_SERVER)
       .pipe(
         retry(2),
@@ -29,7 +29,7 @@ export class ImagesService {
   }
 
   // get a Image by id
-  getImageById(imageId: string): Observable<ImageResponse> {
+  getById(imageId: string): Observable<ImageResponse> {
     return this.httpClient.get<ImageResponse>(this.REST_API_SERVER + '/' + imageId)
       .pipe(
         retry(2),
@@ -38,7 +38,7 @@ export class ImagesService {
   }
 
   // pull an Image
-  pullImage(imageReq: ImageRequest): Observable<ImageRequest> {
+  pull(imageReq: ImageRequest): Observable<ImageRequest> {
     return this.httpClient.post<ImageRequest>(this.REST_API_SERVER, JSON.stringify(imageReq), this.httpOptions)
       .pipe(
         retry(2),
@@ -47,7 +47,7 @@ export class ImagesService {
   }
 
   // delete an Image by id
-  deleteImageById(imageId: string) {
+  deleteById(imageId: string) {
     return this.httpClient.delete(this.REST_API_SERVER + '/' + imageId)
       .pipe(
         retry(1),
@@ -56,7 +56,7 @@ export class ImagesService {
   }
 
   // delete all Images
-  deleteImages() {
+  deleteAll() {
     return this.httpClient.delete(this.REST_API_SERVER)
       .pipe(
         retry(1),
