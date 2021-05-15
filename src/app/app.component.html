@@ -1,0 +1,137 @@
+<!-- app.component.html -->
+
+<div class="container">
+  <h1>Welcome to {{title}} <img src="https://avatars.githubusercontent.com/u/38231749?s=280&v=4" alt="" width="80" height="80"></h1>
+  <h4>A docker resource manager</h4>
+
+  <br>
+  <h4>Create or update a schedule</h4>
+
+  <form [formGroup]="angForm" (ngSubmit)="createTransfer()" novalidate>
+
+    <div class="form-row">
+
+      <div class="col">
+        <label>Origin account number:</label>
+        <input class="form-control" [(ngModel)]="transferRequest.originAccount" minlength="6" maxlength="6" required formControlName="originAccount" type="text">
+        <div
+          *ngIf="angForm.controls['originAccount'].invalid && (angForm.controls['originAccount'].dirty || angForm.controls['originAccount'].touched)"
+          class="alert alert-danger">
+          <div *ngIf="angForm.controls['originAccount'].errors.required">
+            Origin account number is required.
+          </div>
+          <div *ngIf="angForm.controls['originAccount'].errors.minlength">
+            Origin account number must be at least 6 characters long.
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <label>Destination account number:</label>
+        <input class="form-control" [(ngModel)]="transferRequest.destinationAccount" minlength="6" maxlength="6" required formControlName="destinationAccount"
+          type="text">
+        <div
+          *ngIf="angForm.controls['destinationAccount'].invalid && (angForm.controls['destinationAccount'].dirty || angForm.controls['destinationAccount'].touched)"
+          class="alert alert-danger">
+          <div *ngIf="angForm.controls['destinationAccount'].errors.required">
+            Destination account number is required.
+          </div>
+          <div *ngIf="angForm.controls['destinationAccount'].errors.minlength">
+            Destination account number must be at least 6 characters long.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="form-row">
+
+      <div class="col">
+        <label>Transfer value:</label>
+        <input class="form-control" [(ngModel)]="transferRequest.value" required formControlName="transferValue" type="text">
+        <div
+          *ngIf="angForm.controls['transferValue'].invalid && (angForm.controls['transferValue'].dirty || angForm.controls['transferValue'].touched)"
+          class="alert alert-danger">
+          <div *ngIf="angForm.controls['transferValue'].errors.required">
+            Transfer value is required.
+          </div>
+          <div *ngIf="angForm.controls['transferValue'].errors.pattern">
+            Transfer value must be numerical.
+          </div>
+          <div *ngIf="angForm.controls['transferValue'].errors.min">
+            Transfer value must be a minimun value of 0.01.
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col">
+        <label>Date to transfer:</label>
+        <input class="form-control" [(ngModel)]="transferRequest.scheduledDate" minlength="10" maxlength="10" required formControlName="scheduledDate" type="date">
+        <div
+          *ngIf="angForm.controls['scheduledDate'].invalid && (angForm.controls['scheduledDate'].dirty || angForm.controls['scheduledDate'].touched)"
+          class="alert alert-danger">
+          <div *ngIf="angForm.controls['scheduledDate'].errors.required">
+            Scheduling date transfer is required.
+          </div>
+          <div *ngIf="angForm.controls['scheduledDate'].errors.date">
+            Scheduling date does not match the pattern.
+          </div>
+          <div *ngIf="angForm.controls['scheduledDate'].errors.minlength">
+            Scheduling date must have 10 characters long.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <br>
+    <button type="submit" [disabled]="angForm.pristine || angForm.invalid"
+      class="btn btn-success">
+      Submit
+    </button>
+  </form>
+
+  <br />
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Transfer management</li>
+    </ol>
+  </nav>
+  <div class="container">
+    <div class="card list-transfer">
+      <h5 class="card-header">Transfer list</h5>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Origin acc</th>
+              <th scope="col">Destination acc</th> 
+              <th scope="col">Opening date</th>             
+              <th scope="col">Scheduled date</th>              
+              <th scope="col">Tax value</th>
+              <th scope="col">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tf of transferList">
+              <td>{{tf.id}}</td>
+              <td>{{tf.originAccount}}</td>
+              <td>{{tf.destinationAccount}}</td> 
+              <td>{{tf.openingDate}}</td>             
+              <td>{{tf.scheduledDate}}</td>              
+              <td>{{tf.taxValue}}</td>
+              <td>{{tf.value}}</td>
+              <td>
+                <button type="button" class="btn btn-warning btn-sm" (click)="editTransfer(tf)">Edit</button>
+                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteById(tf.id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

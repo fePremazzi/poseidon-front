@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+    front-scheduler:
+        container_name: front-scheduler
+        image: fepremazzi/front-transfer
+        ports:
+            - 4201:4200
+    backend-scheduler:
+        container_name: backend-scheduler
+        image: fepremazzi/banking-transfer
+        ports:
+            - 8080:8080
