@@ -106,6 +106,10 @@ export class AppComponent {
   
   public runContainer(): void{
     console.log("running container")
+    console.log(this.containerRequest)
+    this.containerService.run(this.containerRequest)
+  // this.angForm.reset()
+
   }
 
   public pullImage(): void {
