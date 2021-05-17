@@ -105,15 +105,17 @@ export class AppComponent {
   }
   
   public runContainer(): void{
-    console.log("running container")
-    console.log(this.containerRequest)
-    this.containerService.run(this.containerRequest)
-  // this.angForm.reset()
-
+    this.containerService.run(this.containerRequest).subscribe(() => {
+      this.findAllContainers();
+    });
+    this.angForm.reset()
   }
 
   public pullImage(): void {
-    console.log("pulling image")
+    this.imageService.pull(this.imageRequest).subscribe(() => {
+      this.findAllImages();
+    });
+    this.angForm.reset()
   }
 
   public enableButton(): boolean{
@@ -124,27 +126,10 @@ export class AppComponent {
   //UTILS
 
   public extractPort(object: Object): string{
-    return Object.entries(object["Ports"])[0][1][0]["HostPort"] + ":" + Object.entries(object["Ports"])[0][0]
+    return object["Ports"] != null ? Object.entries(object["Ports"])[0][1][0]["HostPort"] + ":" + Object.entries(object["Ports"])[0][0] : "null"
   }
 
   public extractLink(object: Object): string{
-    return environment.dockerHost + Object.entries(object["Ports"])[0][1][0]["HostPort"]
+    return object["Ports"] != null ? environment.dockerHost + Object.entries(object["Ports"])[0][1][0]["HostPort"] : ""
   }
-
-
-  // public createTransfer(): void {
-  //   this.validDate();
-  //   if (this.transferRequest.id !== 0 && this.transferRequest.id !== undefined && this.transferRequest.id !== null)  {
-  //     this.dataService.updateTransfer(this.transferRequest).subscribe(() => {
-  //       // this.findAll();
-  //     });
-  //     this.angForm.reset()
-  //   } else {
-  //     this.dataService.saveTransfer(this.transferRequest).subscribe(() => {
-  //       // this.findAll();
-  //     });
-  //     this.angForm.reset()
-  //   }
-  // }
-
 }

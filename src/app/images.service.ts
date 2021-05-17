@@ -75,7 +75,7 @@ export class ImagesService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // Server-side errors
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.error["Error"]}`;
     }
     window.alert(errorMessage);
     return throwError(errorMessage);
