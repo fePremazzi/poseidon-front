@@ -107,6 +107,7 @@ export class AppComponent {
   public runContainer(): void{
     this.containerService.run(this.containerRequest).subscribe(() => {
       this.findAllContainers();
+      this.findAllImages();
     });
     this.angForm.reset()
   }
