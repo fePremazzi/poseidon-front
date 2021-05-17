@@ -1,13 +1,13 @@
 version: "3"
 
 services:
-    front-scheduler:
-        container_name: front-scheduler
-        image: fepremazzi/front-transfer
+    poseidon-front:
+        container_name: poseidon-front
+        image: fepremazzi/poseidon-front
         ports:
             - 4201:4200
-    backend-scheduler:
-        container_name: backend-scheduler
-        image: fepremazzi/banking-transfer
+    poseidon-bff:
+        container_name: poseidon-bff
+        image: fepremazzi/poseidon-bff
         ports:
             - 8080:8080
