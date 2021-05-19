@@ -92,19 +92,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let ct of containers">
+            <tr [hidden]="ct.Name.includes('prom_')" *ngFor="let ct of containers">
               <td>{{ct.ShortId}}</td>
-              <td>{{ct.Name}}</td>
-              <td>{{ct.Image}}</td>
-              <td>{{ct.State.StartedAt}}</td>
+              <td>{{ct.Name.substring(0, 15)}}</td>
+              <td>{{ct.Image.substring(0, 15)}}</td>
+              <td>{{ct.State.StartedAt.split(".")[0]}}</td>
               <td>{{ct.State.Status}}</td>
               <td><a href="{{ extractLink(ct) }}" target="_blank">{{extractPort(ct)}}</a></td>
-              <!-- <td>{{Object.entries(ct["Ports"])[0][1][0]["HostPort"]}}:{{Object.entries(ct["Ports"])[0][0]}}</td> -->
               <td>{{ct.CreatedAt}}</td>
               <td>
                 <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteContainerById(ct.ShortId)">Delete</button>
               </td>
-            </tr>
+          </tr>
           </tbody>
         </table>
       </div>

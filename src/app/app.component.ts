@@ -127,10 +127,18 @@ export class AppComponent {
   //UTILS
 
   public extractPort(object: Object): string{
-    return object["Ports"] != null ? Object.entries(object["Ports"])[0][1][0]["HostPort"] + ":" + Object.entries(object["Ports"])[0][0] : "null"
+    try {
+      return object["Ports"] != null ? Object.entries(object["Ports"])[0][1][0]["HostPort"] + ":" + Object.entries(object["Ports"])[0][0] : "null"      
+    } catch (error) {
+      return "null"
+    }
   }
 
   public extractLink(object: Object): string{
-    return object["Ports"] != null ? environment.dockerHost + Object.entries(object["Ports"])[0][1][0]["HostPort"] : ""
+    try {
+      return object["Ports"] != null ? environment.dockerHost + Object.entries(object["Ports"])[0][1][0]["HostPort"] : ""      
+    } catch (error) {
+      return "null"
+    }
   }
 }

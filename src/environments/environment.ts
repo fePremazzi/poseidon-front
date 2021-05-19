@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  dockerHost: "http://192.168.0.178:",
+  dockerHost: "http://192.168.0.179:",
   test: "${TES_ENV}"
 };
 
