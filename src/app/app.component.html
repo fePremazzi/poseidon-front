@@ -141,6 +141,7 @@
     <button type="submit" [disabled]="imageForm.pristine || imageForm.invalid" class="btn btn-success">
       Submit
     </button>
+    <app-my-loader></app-my-loader>
   </form>
 
   <br />
@@ -171,6 +172,7 @@
               <td>{{im.CreatedAt}}</td>
               <td>
                 <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deleteImageById(im.ShortId)">Delete</button>
+                <app-my-loader></app-my-loader>
               </td>
             </tr>
           </tbody>
